@@ -1,5 +1,7 @@
 package com.example.demo.dao.impl;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
@@ -18,12 +20,12 @@ import com.example.demo.dao.ProductDao;
 @Repository
 @Transactional
 public class ProductDaoImpl implements ProductDao {
-	
+
 	@Autowired
 	private EntityManager entityManager;
 
 	@Override
-	public ProductEntity getProduct(Integer id) {
+	public ProductEntity getById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT pe ");
 		sql.append(" FROM ");
@@ -44,6 +46,38 @@ public class ProductDaoImpl implements ProductDao {
 		// ve tim hieu
 		// ProductEntity entity = query.getResultList();
 
+	}
+
+	@Override
+	public void create(ProductEntity productEntity) {
+		entityManager.persist(productEntity);
+
+	}
+
+	@Override
+	public List<ProductEntity> getAll() {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" FROM ");
+		sql.append("    ProductEntity pe ");
+
+		Query query = this.entityManager.createQuery(sql.toString());
+
+		List<ProductEntity> lProductEntities = query.getResultList();
+
+		return lProductEntities;
+	}
+
+	@Override
+	public void updateById(ProductEntity productEntity) {
+
+		this.entityManager.merge(productEntity);
+
+	}
+
+	@Override
+	public void deleteProduct(ProductEntity productEntity) {
+
+		this.entityManager.remove(productEntity);
 	}
 
 }
